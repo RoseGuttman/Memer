@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import { LinearProgress } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 
 function App() {
   const [text, setText] = useState ('')
   const [memes, setMemes] = useState([])
   const [loading, setLoading] = useState(false)
+  
 
   async function getMemes(){ //Standard API call
-    setLoading = (true)
+    setLoading(true)
     setMemes([])
     const key = '9xlLC8IbaeMyjqWVgwIHLO1DEmqNMMen'
     let url = 'https://api.giphy.com/v1/gifs/search?'
@@ -38,11 +39,13 @@ function App() {
           />
           <Button variant="contained" color="primary"
             onClick={getMemes}>
+            <SearchIcon />
             Search
           </Button>
         </div>
-        {loading && <LinearProgress/>}
       </header>
+      {loading && <LinearProgress variant="indeterminate" />}
+        
 
       <div className='memes'>
         {memes.map((meme, i)=> <Meme key ={i} {...meme}/>)}
@@ -52,10 +55,12 @@ function App() {
 }
 
 function Meme({title, images}){
-  return <div className="meme">
-    <img src={images.fixed_height.url} alt="meme"/>
+  const meme = {title, images}
+  const url = meme.images.fixed_height.url
+  return (<div className="meme" onClick={()=>window.open(url, '_blank')}>
+    <img src={url} alt="meme" height="200"/>
     <div className="meme-title">{title}</div>
-  </div>
+  </div>)
 }
 
 export default App;
